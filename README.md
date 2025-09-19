@@ -1,2 +1,0 @@
-# PORTOFOLIO
-mijn portofilio website

@@ -1,0 +1,51 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: times;
+  src: url(/src/assets/fonts/Tinos-Regular.ttf);
+}
+
+body {
+  font-family: 'Courier New', monospace; /* Monospace for consistent letter widths */
+}
+
+.name {
+  position: absolute;
+  top: 15px; /* Moved higher */
+  left: 40px;
+  font-size: 18px;
+  font-family: times; /* Ensure monospace for animation */
+  letter-spacing: 1px; /* Reduced spacing for smaller text */
+  color: #333;
+  z-index: 10;
+  user-select: none; /* Prevent text selection */
+}
+
+/* Mobile devices (phones) */
+@media (max-width: 768px) {
+  .name {
+    top: 10px; /* Moved higher on mobile */
+    left: 20px;
+    font-size: 16px;
+  }
+}
+/* Tablet devices */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .name {
+    top: 12px; /* Moved higher on tablet */
+    left: 30px;
+    font-size: 17px;
+  }
+}
+/* Desktop and larger screens */
+@media (min-width: 1025px) {
+  .name {
+    top: 15px; /* Moved higher on desktop */
+    left: 40px;
+    font-size: 18px;
+  }
+}
