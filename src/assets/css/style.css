@@ -10,42 +10,42 @@
 }
 
 body {
-  font-family: 'Courier New', monospace; /* Monospace for consistent letter widths */
+  background-color: rgb(3, 3, 6);
 }
 
 .name {
   position: absolute;
-  top: 15px; /* Moved higher */
+  top: 15px;
   left: 40px;
   font-size: 18px;
-  font-family: times; /* Ensure monospace for animation */
-  letter-spacing: 1px; /* Reduced spacing for smaller text */
-  color: #333;
+  font-family: times;
+  letter-spacing: 1px;
   z-index: 10;
-  user-select: none; /* Prevent text selection */
+  user-select: none;
+  color: rgba(255, 255, 255, 0.707);
 }
 
-/* Mobile devices (phones) */
+
 @media (max-width: 768px) {
   .name {
-    top: 10px; /* Moved higher on mobile */
-    left: 20px;
-    font-size: 16px;
+    top: 10px;
+    left: 10px;
+    font-size: 12px;
   }
 }
-/* Tablet devices */
+
 @media (min-width: 769px) and (max-width: 1024px) {
   .name {
-    top: 12px; /* Moved higher on tablet */
-    left: 30px;
-    font-size: 17px;
+    top: 12px;
+    left: 20px;
+    font-size: 13px;
   }
 }
-/* Desktop and larger screens */
+
 @media (min-width: 1025px) {
   .name {
-    top: 15px; /* Moved higher on desktop */
-    left: 40px;
-    font-size: 18px;
+    top: 15px; 
+    left: 30px;
+    font-size: 14px;
   }
 }
