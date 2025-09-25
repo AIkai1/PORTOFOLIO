@@ -1,3 +1,4 @@
+function page() {
 const nameElement = document.getElementById("namel");
 const targetText = "Malikhai Felix";
 const initialText = 'abcdefghijklmn';
@@ -45,8 +46,8 @@ const nameLoad = () => {
     setTimeout(startLetterByLetterAnimation, 500);
 };
 
-// Start animation on page load
 document.addEventListener("DOMContentLoaded", () => setTimeout(startLetterByLetterAnimation, 1000));
 
-// Restart on click
 nameElement.addEventListener("click", nameLoad);
+};
+page();

@@ -6,11 +6,14 @@
 
 @font-face {
   font-family: times;
-  src: url(/src/assets/fonts/Tinos-Regular.ttf);
+  src: url('../fonts/Tinos-Regular.ttf') format('truetype');
 }
 
-body {
+html, body {
+  height: 100%;
   background-color: rgb(3, 3, 6);
+  color: rgba(255, 255, 255, 0.707);
+  overflow: hidden;
 }
 
 .name {
@@ -18,17 +21,34 @@ body {
   top: 15px;
   left: 40px;
   font-size: 18px;
-  font-family: times;
+  font-family: times, 'Times New Roman', serif;
   letter-spacing: 1px;
   z-index: 10;
   user-select: none;
   color: rgba(255, 255, 255, 0.707);
 }
 
+#add {
+  position: absolute;
+  top: 50px;
+  left: 40px;
+  font-size: 16px;
+  font-family: times, 'Times New Roman', serif;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  user-select: none;
+}
+
 
 @media (max-width: 768px) {
   .name {
     top: 10px;
+    left: 10px;
+    font-size: 12px;
+  }
+  
+  #add {
+    top: 35px;
     left: 10px;
     font-size: 12px;
   }
@@ -40,6 +60,12 @@ body {
     left: 20px;
     font-size: 13px;
   }
+  
+  #add {
+    top: 40px;
+    left: 20px;
+    font-size: 14px;
+  }
 }
 
 @media (min-width: 1025px) {
@@ -47,5 +73,11 @@ body {
     top: 15px; 
     left: 30px;
     font-size: 14px;
+  }
+  
+  #add {
+    top: 45px;
+    left: 30px;
+    font-size: 15px;
   }
 }
