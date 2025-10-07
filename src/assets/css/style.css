@@ -5,79 +5,105 @@
 }
 
 @font-face {
-  font-family: times;
-  src: url('../fonts/Tinos-Regular.ttf') format('truetype');
+  font-family: inter;
+  src: url('../fonts/inter.ttf') format('truetype');
 }
+
+
 
 html, body {
   height: 100vh;
   background-color: rgb(3, 3, 6);
-  color: rgba(255, 255, 255, 0.707);
+  color: #ffffffb4;
   overflow: hidden;
 }
 
+
+/* Base styles */
 .name {
   position: absolute;
-  top: 15px;
-  left: 40px;
-  font-size: 18px;
-  font-family: times, 'Times New Roman', serif;
-  letter-spacing: 1px;
-  z-index: 10;
+  font-family: inter;
   user-select: none;
-  color: rgba(255, 255, 255, 0.707);
+  color: white;
 }
 
 #add {
   position: absolute;
-  top: 50px;
-  left: 40px;
-  font-size: 16px;
-  font-family: times, 'Times New Roman', serif;
+  font-family: inter;
   color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
   user-select: none;
 }
 
+.comp1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  flex-direction: row;
+}
 
+.comp1 div {
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.comp1 div:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Disable hover for any split characters inside navigation */
+.comp1 div *:hover {
+  color: inherit;
+}
+
+/* Responsive Media Queries */
 @media (max-width: 768px) {
-  .name {
-    top: 10px;
-    left: 10px;
-    font-size: 12px;
-  }
-  
-  #add {
-    top: 35px;
-    left: 10px;
-    font-size: 12px;
-  }
+  .name { top: 10px; left: 10px; font-size: 12px; }
+  #add { top: 35px; left: 10px; font-size: 12px; }
+  .comp1 { gap: 1rem; margin-right: 10px; padding: 5px; }
+  .comp1 div { font-size: 14px; }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
-  .name {
-    top: 12px;
-    left: 20px;
-    font-size: 13px;
-  }
-  
-  #add {
-    top: 40px;
-    left: 20px;
-    font-size: 14px;
-  }
+  .name { top: 12px; left: 20px; font-size: 13px; }
+  #add { top: 40px; left: 20px; font-size: 14px; }
+  .comp1 { gap: 1.5rem; margin-right: 30px; padding: 8px; }
+  .comp1 div { font-size: 16px; }
 }
 
 @media (min-width: 1025px) {
-  .name {
-    top: 15px; 
-    left: 30px;
-    font-size: 14px;
-  }
-  
-  #add {
-    top: 45px;
-    left: 30px;
-    font-size: 15px;
-  }
+  .name { top: 15px; left: 30px; font-size: 14px; }
+  #add { top: 45px; left: 30px; font-size: 15px; }
+  .comp1 { gap: 2rem; margin-right: 50px; padding: 10px; }
+  .comp1 div { font-size: 18px; }
+}
+
+.box {
+  height: 100px;
+  width: 100px;
+  position: fixed;
+  top: 30%;
+  left: 10%;
+  translate: -50%, -50%;
+}
+
+#wel {
+  opacity: 0;
+  font-family: inter;
+}
+
+#box1 {
+  background-color: red;
+  display: none;
+}
+#box2 {
+  background-color: blue;
+  left: 15%;
+  display: none;
+}
+#box3 {
+  background-color: green;
+  left: 20%;
+  display: none;
 }
