@@ -1,3 +1,7 @@
+:root {
+  --display-: none;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -59,7 +63,7 @@ html, body {
 
 /* Responsive Media Queries */
 @media (max-width: 768px) {
-  .name { top: 10px; left: 10px; font-size: 12px; }
+  .name { top: 10px; left: 10px; font-size: 10px; }
   #add { top: 35px; left: 10px; font-size: 12px; }
   .comp1 { gap: 1rem; margin-right: 10px; padding: 5px; }
   .comp1 div { font-size: 14px; }
@@ -93,17 +97,19 @@ html, body {
   font-family: inter;
 }
 
-#box1 {
+#startbox1 {
   background-color: red;
-  display: none;
+  display: block;
 }
-#box2 {
+#aboutbox2 {
   background-color: blue;
-  left: 15%;
-  display: none;
+  display: var(--display-);
 }
-#box3 {
+#projectbox3 {
   background-color: green;
-  left: 20%;
-  display: none;
+  display: var(--display-);
+}
+#contactbox4 {
+  background-color: yellow;
+  display: var(--display-);
 }
