@@ -73,10 +73,10 @@ html, body {
   .comp1 div { font-size: 18px; }
 }
 .box {
-  position: fixed;
+  position: absolute;
   inset: 5vw;
   margin: auto;
-  display: block;
+  display: flex;
   justify-content: center;
   align-items: center;
   padding: 1rem;
