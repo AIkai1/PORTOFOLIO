@@ -57,14 +57,19 @@ html, body {
   #add { top: 35px; left: 10px; font-size: 12px; }
   .comp1 { gap: 1rem; margin-right: 10px; padding: 5px; }
   .comp1 div { font-size: 14px; }
-  .box { inset: 2vw; padding: 0.5rem; }
+  .box { 
+    inset: 2vw;
+    padding: 0.5rem; 
+  }
 }
 @media (min-width: 769px) and (max-width: 1024px) {
   .name { top: 12px; left: 20px; font-size: 13px; }
   #add { top: 40px; left: 20px; font-size: 14px; }
   .comp1 { gap: 1.5rem; margin-right: 30px; padding: 8px; }
   .comp1 div { font-size: 16px; }
-  .box { inset: 3vw; }
+  .box { 
+    inset: 3vw;
+  }
 }
 @media (min-width: 1025px) {
   .name { top: 15px; left: 30px; font-size: 14px; }
@@ -77,6 +82,7 @@ html, body {
   inset: 5vw;
   margin: auto;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 1rem;
