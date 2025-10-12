@@ -23,7 +23,7 @@ function navigateToPage(targetIndex) {
     
     // If already active, don't do anything
     if (window.getComputedStyle(navPages[targetIndex].content).display === "flex") return;
-    
+    if (navPages[targetIndex].button.id === "namel") {initLetterAnimation()};
     // Hide all boxes and reset button colors
     navPages.forEach(page => {
         page.button.style.color = "#b5b5b5";

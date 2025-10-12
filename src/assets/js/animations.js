@@ -3,18 +3,29 @@ import { SplitText } from '/gsap-public/esm/SplitText.js';
 
 // Initialize GSAP animations
 export function initAnimations() {
-    // Set initial opacity for divs
     gsap.set("div", { opacity: 1 });
-    
-    // Create split text animation for welcome text
-    let split = SplitText.create("#wel", { type: "chars" });
     gsap.registerPlugin(SplitText);
-    gsap.from(split.chars, {
+    
+    // Animate navigation menu
+    const navSplit = SplitText.create("#wel", { type: "chars" });
+    gsap.from(navSplit.chars, {
         y: 50,
         autoAlpha: 0,
         stagger: 0.05,
         duration: 2, 
         ease: "power4"
+    });
+    
+    // Animate welcome text letters
+    const welcomeSplit = SplitText.create(".greet", { type: "chars" });
+    gsap.from(welcomeSplit.chars, {
+        x: () => gsap.utils.random(-150, 150),
+        y: () => gsap.utils.random(-550, 550),
+        stagger: 0.1,
+        duration: 1.5,
+        opacity: 0,
+        ease: "power2.out",
+        delay: 0.5
     });
 }
 
