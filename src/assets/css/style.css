@@ -165,7 +165,7 @@ html, body {
 
 .greet {
   text-align: center;
-  color: red;
+  color: rgb(20, 20, 20);
   font-size: clamp(3rem, 15vw, 15rem);
   margin: 0;
   padding: 0;

@@ -19,17 +19,15 @@ export function initAnimations() {
 }
 
 // Function to animate box transitions
-export function animateBoxTransition(contentElement) {
+export function animateBoxTransition(contentElement, xValue) {
     // Show and animate the selected box
     gsap.set(contentElement, { 
         display: "flex",
-        x: -1500,
-        opacity: 0
+        x: xValue,
     });
     
     gsap.to(contentElement, {
-        ease: "power4.out",
+        ease: "power1.outin",
         x: 0,
-        opacity: 1
     });
 }
