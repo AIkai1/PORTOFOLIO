@@ -14,7 +14,7 @@ export function initAnimations() {
         autoAlpha: 0,
         stagger: 0.05,
         duration: 2, 
-        ease: "circ"
+        ease: "power4"
     });
 }
 
@@ -22,15 +22,14 @@ export function initAnimations() {
 export function animateBoxTransition(contentElement) {
     // Show and animate the selected box
     gsap.set(contentElement, { 
-        display: "block",
-        y: 1000,
+        display: "flex",
+        x: -1500,
         opacity: 0
     });
     
     gsap.to(contentElement, {
-        duration: 0.8,
-        ease: "circ.out",
-        y: 0,
+        ease: "power4.out",
+        x: 0,
         opacity: 1
     });
 }

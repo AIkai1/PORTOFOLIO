@@ -14,12 +14,11 @@ html, body {
   height: 100vh;
   background-color: rgb(0, 0, 0);
   color: #ffffffb4;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   position: relative;
 }
 
-
-/* Base styles */
 .name {
   position: absolute;
   font-family: inter;
@@ -59,7 +58,11 @@ html, body {
   .comp1 div { font-size: 14px; }
   .box { 
     inset: 2vw;
-    padding: 0.5rem; 
+    min-height: 300px;
+    max-height: 85vh;
+    min-width: 280px;
+    max-width: 96vw;
+    padding: 1rem; 
   }
 }
 @media (min-width: 769px) and (max-width: 1024px) {
@@ -69,6 +72,11 @@ html, body {
   .comp1 div { font-size: 16px; }
   .box { 
     inset: 3vw;
+    min-height: 400px;
+    max-height: 85vh;
+    min-width: 320px;
+    max-width: 94vw;
+    padding: 1.5rem;
   }
 }
 @media (min-width: 1025px) {
@@ -76,6 +84,13 @@ html, body {
   #add { top: 45px; left: 30px; font-size: 15px; }
   .comp1 { gap: 2rem; margin-right: 50px; padding: 10px; }
   .comp1 div { font-size: 18px; }
+  .box {
+    min-height: 500px;
+    max-height: 85vh;
+    min-width: 400px;
+    max-width: 90vw;
+    padding: 2rem;
+  }
 }
 .box {
   position: absolute;
@@ -85,30 +100,76 @@ html, body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 1rem;
-  overflow: auto;
+  padding: 2rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 500px;
+  max-height: 85vh;
+  min-width: 400px;
+  max-width: 90vw;
+  z-index: 1;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
+
+/* Box z-index layering for proper stacking */
+/* All boxes use flex for proper centering */
+#startbox1 {
+  background-color: ;
+  display: flex;
+  z-index: 10;
+  font-family: inter;
+}
+
+#aboutbox2 {
+  background-color: blue;
+  display: none;
+  z-index: 9;
+}
+
+#projectbox3 {
+  background-color: green;
+  display: none;
+  z-index: 8;
+}
+
+#contactbox4 {
+  background-color: yellow;
+  display: none;
+  z-index: 7;
+}
+
 #wel {
   opacity: 0;
   font-family: inter;
+  z-index: 15;
 }
 
+/* Additional responsive safety measures */
+@media (max-width: 480px) {
+  .box {
+    inset: 1vw;
+    min-width: 95vw;
+    min-height: 90vh;
+    padding: 1rem;
+  }
+  .name { font-size: 8px; }
+  #add { font-size: 10px; }
+  .comp1 div { font-size: 12px; }
+}
 
+@media (orientation: landscape) and (max-height: 500px) {
+  .box {
+    max-height: 95vh;
+    inset: 2vh 5vw;
+  }
+}
 
-#startbox1 {
-  background-color: red;
-  display: block;
-  font-family: inter;
-}
-#aboutbox2 {
-  background-color: blue;
-  display: var(--display-);
-}
-#projectbox3 {
-  background-color: green;
-  display: var(--display-);
-}
-#contactbox4 {
-  background-color: yellow;
-  display: var(--display-);
+.greet {
+  text-align: center;
+  color: red;
+  font-size: clamp(15rem, 8vw, 5rem);
+  margin: 0;
+  padding: 0;
+  font-weight: bolder;
+  /* Remove display and width - let flexbox handle positioning */
 }

@@ -14,19 +14,16 @@ const navPages = [
 
 for (let i = 0; i < navPages.length; i++) {
     navPages[i].button.addEventListener("click", () => {
+        // If already active, don't do anything
+        if (window.getComputedStyle(navPages[i].content).display === "flex") return;
+        
         // Hide all boxes and reset button colors
         navPages.forEach(page => {
             page.button.style.color = "#b5b5b5";
             page.content.style.display = "none";
         });
         
-        // Update active button color
         navPages[i].button.style.color = "#ffffff";
-        
-        // Animate the selected box
         animateBoxTransition(navPages[i].content);
-        
-        console.log("Active button:", navPages[i].button.textContent);
-        console.log(navPages[i].content);
     });
 }
