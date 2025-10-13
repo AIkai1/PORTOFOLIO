@@ -1,7 +1,7 @@
 import { initLetterAnimation } from './letter.js';
 import { initAnimations, animateBoxTransition} from './animations.js';
 import { initNavigation } from './navigation.js';
-import { initVideoTextEffect } from './animation.js';
+import { initVideoTextEffect } from './videoTextEffect.js';
 
 // Initialize all animations
 initLetterAnimation();
@@ -34,8 +34,6 @@ function navigateToPage(targetIndex) {
 
     // Determine slide direction based on current vs target page
     let xAnimationValue = targetIndex > currentPageIndex ? -1500 : 1500;
-    
-    // Update current page index
     currentPageIndex = targetIndex;
     
     console.log(`Navigating to: ${navPages[targetIndex].button.textContent}, Index: ${targetIndex}, Direction: ${xAnimationValue > 0 ? 'from left' : 'from right'}`);
