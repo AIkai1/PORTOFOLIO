@@ -163,6 +163,33 @@ html, body {
   }
 }
 
+/* Video text container */
+.video-text-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Video element - hidden, used as source */
+#text-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: cover;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .greet {
   text-align: center;
   color: white;
@@ -171,6 +198,8 @@ html, body {
   padding: 0;
   font-weight: bolder;
   line-height: 1;
+  position: relative;
+  z-index: 2;
 }
 
 /* Mobile-specific adjustments for greeting */
@@ -210,6 +239,7 @@ html, body {
   width: auto;
   height: auto;
   cursor: pointer;
+  color: white;
 }
 
 .name-line {
