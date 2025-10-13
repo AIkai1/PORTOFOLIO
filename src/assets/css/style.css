@@ -12,7 +12,7 @@
 }
 html, body {
   height: 100vh;
-  background-color: rgb(49, 49, 49);
+  background-color: rgb(0, 0, 0);
   color: #ffffffb4;
   overflow-x: hidden;
   overflow-y: auto;
