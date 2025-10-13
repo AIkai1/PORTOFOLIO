@@ -198,3 +198,49 @@ html, body {
     font-size: clamp(3rem, 14vw, 6.5rem);
   }
 }
+
+.mane {
+  background-color: transparent;
+  margin: 1px;
+  display: inline-block;
+  text-align: center;
+  line-height: 1;
+  vertical-align: middle;
+  padding: 1px;
+  width: auto;
+  height: auto;
+  cursor: pointer;
+}
+
+.name-line {
+  display: block;
+  overflow: visible;
+  white-space: nowrap;
+}
+
+/* Responsive adjustments for .mane spans */
+@media (max-width: 768px) {
+  .mane {
+    margin: 0.5px;
+  }
+  .greet {
+    word-spacing: 0.2em;
+    letter-spacing: 0.05em;
+  }
+}
+
+@media (max-width: 480px) {
+  .mane {
+    margin: 0.2px;
+  }
+  .greet {
+    word-spacing: 0.1em;
+    letter-spacing: 0.02em;
+  }
+}
+
+@media (max-width: 390px) {
+  .mane {
+    margin: 0.1px;
+  }
+}

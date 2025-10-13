@@ -1,10 +1,12 @@
 import { initLetterAnimation } from './letter.js';
 import { initAnimations, animateBoxTransition} from './animations.js';
 import { initNavigation } from './navigation.js';
+import { initLetterHoverEffects } from './animation.js';
 
 // Initialize all animations
 initLetterAnimation();
 initAnimations();
+initLetterHoverEffects();
 
 const navPages = [
     {button: document.getElementById("namel"), content: document.getElementById("startbox1")},
