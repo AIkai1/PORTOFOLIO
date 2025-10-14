@@ -190,6 +190,17 @@ html, body {
   pointer-events: none;
 }
 
+/* Hide Video.js controls and UI */
+.video-js .vjs-big-play-button,
+.video-js .vjs-control-bar,
+.video-js .vjs-loading-spinner {
+  display: none !important;
+}
+
+.video-js {
+  background-color: transparent !important;
+}
+
 .greet {
   text-align: center;
   color: white;
@@ -200,6 +211,11 @@ html, body {
   line-height: 1;
   position: relative;
   z-index: 2;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  pointer-events: none;
 }
 
 /* Mobile-specific adjustments for greeting */

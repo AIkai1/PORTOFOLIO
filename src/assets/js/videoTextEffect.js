@@ -1,29 +1,130 @@
 // OPTIMIZED Canvas video text effect - FAST & SMOOTH
 import { gsap } from "../../../gsap-public/esm/index.js";
 
+// Store video player globally
+let globalPlayer = null;
+let globalVideo = null;
+let globalCanvas = null;
+let globalCtx = null;
+
 export function initVideoTextEffect() {
-    console.log('Initializing OPTIMIZED video text effect...');
-    const video = document.getElementById('text-video');
+    console.log('Initializing Video.js OPTIMIZED video text effect with adaptive quality...');
+    
     const greetElement = document.querySelector('.greet');
     
-    if (!video || !greetElement) {
-        console.error('Video or greet element not found!');
+    if (!greetElement) {
+        console.error('Greet element not found!');
         return;
     }
     
-    // Keep video hidden - only used as source
-    video.style.opacity = '0';
-    video.style.visibility = 'hidden';
+    // Detect connection speed and choose best quality
+    function getOptimalVideoSource() {
+        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        const isMobile = window.innerWidth < 768;
+        
+        // Default to medium quality
+        let quality = 'background-medium.mp4'; // 9.5 MB
+        
+        if (isMobile) {
+            // Mobile always gets lowest quality
+            quality = 'background-low.mp4'; // 5 MB
+            console.log('Mobile detected - using LOWEST quality (5MB)');
+        } else if (connection) {
+            const effectiveType = connection.effectiveType;
+            const saveData = connection.saveData;
+            
+            if (saveData) {
+                // User has data saver on
+                quality = 'background-low.mp4'; // 5 MB
+                console.log('Data saver ON - using LOWEST quality (5MB)');
+            } else if (effectiveType === '4g') {
+                // 4G connection - highest quality
+                quality = 'background-high.mp4'; // 30 MB
+                console.log('4G detected - using HIGHEST quality (30MB)');
+            } else if (effectiveType === '3g') {
+                // 3G connection - high-medium quality
+                quality = 'background-medium-high.mp4'; // 17.7 MB
+                console.log('3G detected - using HIGH-MEDIUM quality (17.7MB)');
+            } else if (effectiveType === '2g' || effectiveType === 'slow-2g') {
+                // Slow connection - lowest quality
+                quality = 'background-low.mp4'; // 5 MB
+                console.log('Slow connection (2G) - using LOWEST quality (5MB)');
+            } else {
+                // Default medium
+                quality = 'background-medium.mp4'; // 9.5 MB
+                console.log('Standard connection - using MEDIUM quality (9.5MB)');
+            }
+        } else {
+            // Can't detect connection - use medium as safe default
+            console.log('Connection detection unavailable - using MEDIUM quality (9.5MB)');
+        }
+        
+        return `src/assets/videos/${quality}`;
+    }
     
-    // Play the video
-    video.play().then(() => {
-        console.log('Video playing!');
-    }).catch(err => {
-        console.error('Video play failed:', err);
+    // Initialize Video.js with optimal source
+    const player = videojs('text-video', {
+        controls: false,
+        autoplay: true,
+        loop: true,
+        muted: true,
+        preload: 'auto',
+        fluid: false,
+        sources: [{
+            src: getOptimalVideoSource(),
+            type: 'video/mp4'
+        }]
     });
     
-    // Wait for SplitText animation to complete (3 seconds total)
-    setTimeout(() => {
+    // Wait for Video.js to be ready
+    player.ready(function() {
+        console.log('Video.js player is ready!');
+        
+        // Get the actual HTML5 video element from Video.js
+        const video = player.el().querySelector('video');
+        
+        if (!video) {
+            console.error('Video element not found!');
+            return;
+        }
+        
+        // Store globally
+        globalPlayer = player;
+        globalVideo = video;
+        
+        // Keep video hidden - only used as source
+        video.style.opacity = '0';
+        video.style.visibility = 'hidden';
+        
+        // Play the video
+        player.play().then(() => {
+            console.log('Video playing with Video.js!');
+        }).catch(err => {
+            console.error('Video play failed:', err);
+        });
+        
+        // Set the text content first
+        greetElement.innerHTML = 'MALIKHAI<br>FELIX';
+        
+        // Import and use SplitText for the original animation
+        import('../../../gsap-public/esm/SplitText.js').then(({ SplitText }) => {
+            gsap.registerPlugin(SplitText);
+            
+            // Create the original character animation
+            const welcomeSplit = SplitText.create(".greet", { type: "chars" });
+            gsap.from(welcomeSplit.chars, {
+                x: () => gsap.utils.random(-150, 150),
+                y: () => gsap.utils.random(-550, 550),
+                stagger: 0.1,
+                duration: 1.5,
+                opacity: 0,
+                ease: "power2.out",
+                delay: 0.5
+            });
+        });
+        
+        // Wait for SplitText animation to complete (3 seconds total)
+        setTimeout(() => {
         console.log('Animation complete! Replacing with plain text...');
         
         // Replace all the SplitText spans with simple plain text
@@ -31,12 +132,16 @@ export function initVideoTextEffect() {
         
         console.log('Plain text set! Now applying video effect...');
         
-        // Create optimized canvas
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d', { 
-            alpha: false,
-            willReadFrequently: false
-        });
+        // Create optimized canvas (reuse if exists)
+        if (!globalCanvas) {
+            globalCanvas = document.createElement('canvas');
+            globalCtx = globalCanvas.getContext('2d', { 
+                alpha: false,
+                willReadFrequently: false
+            });
+        }
+        const canvas = globalCanvas;
+        const ctx = globalCtx;
         
         // Set canvas size to match video
         canvas.width = video.videoWidth || 1920;
@@ -101,5 +206,58 @@ export function initVideoTextEffect() {
             }
         });
         
-    }, 3000);
+        }, 3000);
+    });
+}
+
+// Function to replay the greet animation - does EXACTLY what happens on initial load
+export function replayGreetAnimation() {
+    console.log('=== REPLAY GREET ANIMATION CALLED ===');
+    
+    const greetElement = document.querySelector('.greet');
+    
+    if (!greetElement) {
+        console.error('Greet element not found!');
+        return;
+    }
+    
+    console.log('Before reset - color:', greetElement.style.color, 'background:', greetElement.style.background);
+    
+    // RESET all video effect styles to normal white text FIRST
+    greetElement.style.background = 'none';
+    greetElement.style.backgroundClip = 'border-box';
+    greetElement.style.webkitBackgroundClip = 'border-box';
+    greetElement.style.webkitTextFillColor = 'white';
+    greetElement.style.color = 'white';
+    greetElement.style.opacity = '1';
+    
+    console.log('After reset - color:', greetElement.style.color, 'text:', greetElement.textContent);
+    
+    // Set the text content
+    greetElement.innerHTML = 'MALIKHAI<br>FELIX';
+    
+    console.log('Text set, starting SplitText animation...');
+    
+    // Import and use SplitText for the animation (EXACT SAME AS INITIAL LOAD)
+    import('../../../gsap-public/esm/SplitText.js').then(({ SplitText }) => {
+        gsap.registerPlugin(SplitText);
+        
+        console.log('SplitText loaded, creating animation...');
+        
+        // Create the character animation
+        const welcomeSplit = SplitText.create(".greet", { type: "chars" });
+        console.log('Split into', welcomeSplit.chars.length, 'characters');
+        
+        gsap.from(welcomeSplit.chars, {
+            x: () => gsap.utils.random(-150, 150),
+            y: () => gsap.utils.random(-550, 550),
+            stagger: 0.1,
+            duration: 1.5,
+            opacity: 0,
+            ease: "power2.out",
+            delay: 0.5,
+            onStart: () => console.log('Character animation STARTED'),
+            onComplete: () => console.log('Character animation COMPLETE')
+        });
+    });
 }

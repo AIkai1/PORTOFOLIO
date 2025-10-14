@@ -1,1 +1,0 @@
-// This file is now empty - video effect moved to videoTextEffect.js for better performance
