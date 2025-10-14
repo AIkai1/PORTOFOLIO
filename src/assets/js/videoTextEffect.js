@@ -159,14 +159,21 @@ export function initVideoTextEffect() {
                 const dataURL = canvas.toDataURL('image/jpeg', 0.85);
                 
                 // Apply background clipping to text
-                // NOTE: background-attachment fixed removed to prevent mobile flickering
                 greetElement.style.background = `url(${dataURL})`;
                 greetElement.style.backgroundPosition = 'center center';
                 greetElement.style.backgroundSize = 'cover';
+                greetElement.style.backgroundAttachment = 'fixed';
                 greetElement.style.webkitBackgroundClip = 'text';
                 greetElement.style.backgroundClip = 'text';
                 greetElement.style.webkitTextFillColor = 'transparent';
                 greetElement.style.color = 'transparent';
+                
+                // Mobile optimization - force GPU acceleration
+                if (isMobile) {
+                    greetElement.style.transform = 'translateZ(0)';
+                    greetElement.style.webkitTransform = 'translateZ(0)';
+                    greetElement.style.willChange = 'transform';
+                }
             }
             
             requestAnimationFrame(updateVideoBackground);
