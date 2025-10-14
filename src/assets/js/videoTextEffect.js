@@ -168,17 +168,21 @@ export function initVideoTextEffect() {
                     greetElement.style.background = `url(${dataURL})`;
                     greetElement.style.backgroundPosition = 'center center';
                     greetElement.style.backgroundSize = 'cover';
-                    greetElement.style.backgroundAttachment = 'fixed';
+                    // Use scroll on mobile - fixed causes flickering on iOS
+                    greetElement.style.backgroundAttachment = isMobile ? 'scroll' : 'fixed';
                     greetElement.style.webkitBackgroundClip = 'text';
                     greetElement.style.backgroundClip = 'text';
                     greetElement.style.webkitTextFillColor = 'transparent';
                     greetElement.style.color = 'transparent';
                     
-                    // Mobile optimization - force GPU acceleration
+                    // Mobile optimization - force GPU acceleration and backface visibility
                     if (isMobile) {
-                        greetElement.style.transform = 'translateZ(0)';
-                        greetElement.style.webkitTransform = 'translateZ(0)';
-                        greetElement.style.willChange = 'transform';
+                        greetElement.style.transform = 'translate3d(0, 0, 0)';
+                        greetElement.style.webkitTransform = 'translate3d(0, 0, 0)';
+                        greetElement.style.backfaceVisibility = 'hidden';
+                        greetElement.style.webkitBackfaceVisibility = 'hidden';
+                        greetElement.style.perspective = '1000px';
+                        greetElement.style.webkitPerspective = '1000px';
                     }
                 }
             }
