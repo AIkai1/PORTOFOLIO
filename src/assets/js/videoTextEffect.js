@@ -8,12 +8,9 @@ let globalCanvas = null;
 let globalCtx = null;
 
 export function initVideoTextEffect() {
-    console.log('Initializing Video.js OPTIMIZED video text effect with adaptive quality...');
-    
     const greetElement = document.querySelector('.greet');
     
     if (!greetElement) {
-        console.error('Greet element not found!');
         return;
     }
     
@@ -28,7 +25,6 @@ export function initVideoTextEffect() {
         if (isMobile) {
             // Mobile always gets lowest quality
             quality = 'background-low.mp4'; // 5 MB
-            console.log('Mobile detected - using LOWEST quality (5MB)');
         } else if (connection) {
             const effectiveType = connection.effectiveType;
             const saveData = connection.saveData;
@@ -36,27 +32,19 @@ export function initVideoTextEffect() {
             if (saveData) {
                 // User has data saver on
                 quality = 'background-low.mp4'; // 5 MB
-                console.log('Data saver ON - using LOWEST quality (5MB)');
             } else if (effectiveType === '4g') {
                 // 4G connection - highest quality
                 quality = 'background-high.mp4'; // 30 MB
-                console.log('4G detected - using HIGHEST quality (30MB)');
             } else if (effectiveType === '3g') {
                 // 3G connection - high-medium quality
                 quality = 'background-medium-high.mp4'; // 17.7 MB
-                console.log('3G detected - using HIGH-MEDIUM quality (17.7MB)');
             } else if (effectiveType === '2g' || effectiveType === 'slow-2g') {
                 // Slow connection - lowest quality
                 quality = 'background-low.mp4'; // 5 MB
-                console.log('Slow connection (2G) - using LOWEST quality (5MB)');
             } else {
                 // Default medium
                 quality = 'background-medium.mp4'; // 9.5 MB
-                console.log('Standard connection - using MEDIUM quality (9.5MB)');
             }
-        } else {
-            // Can't detect connection - use medium as safe default
-            console.log('Connection detection unavailable - using MEDIUM quality (9.5MB)');
         }
         
         return `src/assets/videos/${quality}`;
@@ -78,13 +66,10 @@ export function initVideoTextEffect() {
     
     // Wait for Video.js to be ready
     player.ready(function() {
-        console.log('Video.js player is ready!');
-        
         // Get the actual HTML5 video element from Video.js
         const video = player.el().querySelector('video');
         
         if (!video) {
-            console.error('Video element not found!');
             return;
         }
         
@@ -97,10 +82,8 @@ export function initVideoTextEffect() {
         video.style.visibility = 'hidden';
         
         // Play the video
-        player.play().then(() => {
-            console.log('Video playing with Video.js!');
-        }).catch(err => {
-            console.error('Video play failed:', err);
+        player.play().catch(() => {
+            // Silently handle play errors
         });
         
         // Set the text content first
@@ -125,12 +108,8 @@ export function initVideoTextEffect() {
         
         // Wait for SplitText animation to complete (3 seconds total)
         setTimeout(() => {
-        console.log('Animation complete! Replacing with plain text...');
-        
         // Replace all the SplitText spans with simple plain text
         greetElement.innerHTML = 'MALIKHAI<br>FELIX';
-        
-        console.log('Plain text set! Now applying video effect...');
         
         // Create optimized canvas (reuse if exists)
         if (!globalCanvas) {
@@ -147,9 +126,12 @@ export function initVideoTextEffect() {
         canvas.width = video.videoWidth || 1920;
         canvas.height = video.videoHeight || 1080;
         
+        // Mobile optimizations
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        const FPS = isMobile ? 20 : 30; // Lower FPS on mobile to reduce flickering
+        
         let videoOpacity = 0;
         let lastUpdate = 0;
-        const FPS = 30;
         const frameInterval = 1000 / FPS;
         
         // Keep text WHITE initially - will apply video effect gradually
@@ -177,10 +159,10 @@ export function initVideoTextEffect() {
                 const dataURL = canvas.toDataURL('image/jpeg', 0.85);
                 
                 // Apply background clipping to text
+                // NOTE: background-attachment fixed removed to prevent mobile flickering
                 greetElement.style.background = `url(${dataURL})`;
                 greetElement.style.backgroundPosition = 'center center';
                 greetElement.style.backgroundSize = 'cover';
-                greetElement.style.backgroundAttachment = 'fixed';
                 greetElement.style.webkitBackgroundClip = 'text';
                 greetElement.style.backgroundClip = 'text';
                 greetElement.style.webkitTextFillColor = 'transparent';
@@ -200,9 +182,6 @@ export function initVideoTextEffect() {
             ease: 'power2.inOut',
             onUpdate: function() {
                 videoOpacity = this.targets()[0].value;
-            },
-            onComplete: () => {
-                console.log('Video effect fully transitioned!');
             }
         });
         
@@ -212,16 +191,11 @@ export function initVideoTextEffect() {
 
 // Function to replay the greet animation - does EXACTLY what happens on initial load
 export function replayGreetAnimation() {
-    console.log('=== REPLAY GREET ANIMATION CALLED ===');
-    
     const greetElement = document.querySelector('.greet');
     
     if (!greetElement) {
-        console.error('Greet element not found!');
         return;
     }
-    
-    console.log('Before reset - color:', greetElement.style.color, 'background:', greetElement.style.background);
     
     // RESET all video effect styles to normal white text FIRST
     greetElement.style.background = 'none';
@@ -231,22 +205,15 @@ export function replayGreetAnimation() {
     greetElement.style.color = 'white';
     greetElement.style.opacity = '1';
     
-    console.log('After reset - color:', greetElement.style.color, 'text:', greetElement.textContent);
-    
     // Set the text content
     greetElement.innerHTML = 'MALIKHAI<br>FELIX';
-    
-    console.log('Text set, starting SplitText animation...');
     
     // Import and use SplitText for the animation (EXACT SAME AS INITIAL LOAD)
     import('../../../gsap-public/esm/SplitText.js').then(({ SplitText }) => {
         gsap.registerPlugin(SplitText);
         
-        console.log('SplitText loaded, creating animation...');
-        
         // Create the character animation
         const welcomeSplit = SplitText.create(".greet", { type: "chars" });
-        console.log('Split into', welcomeSplit.chars.length, 'characters');
         
         gsap.from(welcomeSplit.chars, {
             x: () => gsap.utils.random(-150, 150),
@@ -255,9 +222,7 @@ export function replayGreetAnimation() {
             duration: 1.5,
             opacity: 0,
             ease: "power2.out",
-            delay: 0.5,
-            onStart: () => console.log('Character animation STARTED'),
-            onComplete: () => console.log('Character animation COMPLETE')
+            delay: 0.5
         });
     });
 }
