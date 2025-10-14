@@ -128,11 +128,12 @@ export function initVideoTextEffect() {
         
         // Mobile-specific FPS throttling
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        const FPS = isMobile ? 20 : 60; // 20 FPS on mobile, 60 FPS on desktop
+        const FPS = isMobile ? 15 : 30; // Much lower FPS on mobile to prevent flickering
         
         let videoOpacity = 0;
         let lastUpdate = 0;
         const frameInterval = 1000 / FPS;
+        let lastDataURL = null; // Cache to prevent unnecessary updates
         
         // Keep text WHITE initially - will apply video effect gradually
         greetElement.style.color = 'white';
@@ -155,24 +156,30 @@ export function initVideoTextEffect() {
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
                 ctx.globalAlpha = 1;
                 
-                // Convert to data URL
-                const dataURL = canvas.toDataURL('image/jpeg', 0.85);
+                // Convert to data URL with lower quality on mobile
+                const quality = isMobile ? 0.7 : 0.85;
+                const dataURL = canvas.toDataURL('image/jpeg', quality);
                 
-                // Apply background clipping to text
-                greetElement.style.background = `url(${dataURL})`;
-                greetElement.style.backgroundPosition = 'center center';
-                greetElement.style.backgroundSize = 'cover';
-                greetElement.style.backgroundAttachment = 'fixed';
-                greetElement.style.webkitBackgroundClip = 'text';
-                greetElement.style.backgroundClip = 'text';
-                greetElement.style.webkitTextFillColor = 'transparent';
-                greetElement.style.color = 'transparent';
-                
-                // Mobile optimization - force GPU acceleration
-                if (isMobile) {
-                    greetElement.style.transform = 'translateZ(0)';
-                    greetElement.style.webkitTransform = 'translateZ(0)';
-                    greetElement.style.willChange = 'transform';
+                // Only update if changed significantly (helps reduce flickering)
+                if (dataURL !== lastDataURL) {
+                    lastDataURL = dataURL;
+                    
+                    // Apply background clipping to text
+                    greetElement.style.background = `url(${dataURL})`;
+                    greetElement.style.backgroundPosition = 'center center';
+                    greetElement.style.backgroundSize = 'cover';
+                    greetElement.style.backgroundAttachment = 'fixed';
+                    greetElement.style.webkitBackgroundClip = 'text';
+                    greetElement.style.backgroundClip = 'text';
+                    greetElement.style.webkitTextFillColor = 'transparent';
+                    greetElement.style.color = 'transparent';
+                    
+                    // Mobile optimization - force GPU acceleration
+                    if (isMobile) {
+                        greetElement.style.transform = 'translateZ(0)';
+                        greetElement.style.webkitTransform = 'translateZ(0)';
+                        greetElement.style.willChange = 'transform';
+                    }
                 }
             }
             
