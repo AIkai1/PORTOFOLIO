@@ -126,7 +126,7 @@ html, body {
 }
 
 #aboutbox2 {
-  background-color: rgb(0, 0, 255);
+  background-color: rgba(0, 21, 255, 0);
   display: none;
   z-index: 9;
 }

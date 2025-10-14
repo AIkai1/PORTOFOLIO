@@ -78,6 +78,11 @@ export function animateAboutText() {
     const aboutText = document.querySelector('.about');
     if (!aboutText) return;
     
+    // Capture Malikhai's current position BEFORE changing text
+    const originalMalikhaiRect = aboutText.getBoundingClientRect();
+    const parentRect = aboutText.parentElement.getBoundingClientRect();
+    const originalMalikhaiX = originalMalikhaiRect.left - parentRect.left;
+    
     // Set the text content
     aboutText.textContent = "Hello there! I'm Malikhai. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nam deleniti amet ipsam reiciendis quisquam mollitia impedit dolor optio eius! Atque voluptatibus tempore eum, labore voluptatum aliquid harum aperiam fuga veniam.";
     
@@ -104,73 +109,144 @@ export function animateAboutText() {
         }
     });
     
-    // Store original positions
+    // Store original positions BEFORE making them absolute
     const originalPositions = words.map(word => {
+        const rect = word.getBoundingClientRect();
+        const textParentRect = aboutText.getBoundingClientRect();
         return {
-            x: word.offsetLeft,
-            y: word.offsetTop
+            x: rect.left - textParentRect.left,
+            y: rect.top - textParentRect.top
         };
     });
     
-    // Set initial state for all words
-    gsap.set(words, {
-        opacity: 0,
-        position: "absolute",
-        y: (i) => originalPositions[i].y
+    // Set initial state for all words - position absolute with original positions
+    words.forEach((word, i) => {
+        gsap.set(word, {
+            position: "absolute",
+            left: originalPositions[i].x,
+            top: originalPositions[i].y
+        });
     });
     
-    // Malikhai starts at its correct position but hidden
-    if (malikhaiIndex !== -1) {
-        gsap.set(words[malikhaiIndex], {
-            x: originalPositions[malikhaiIndex].x,
-            opacity: 1
-        });
-    }
-    
-    // Other words start far off-screen and hidden
+    // Set Malikhai and other words initial positions
     words.forEach((word, i) => {
-        if (i !== malikhaiIndex) {
-            const direction = Math.random() > 0.5 ? 1 : -1;
+        if (i === malikhaiIndex) {
+            // Malikhai starts from the bottom of the page
             gsap.set(word, {
-                x: direction * gsap.utils.random(window.innerWidth * 2, window.innerWidth * 5),
-                opacity: 1
+                opacity: 1,
+                y: window.innerHeight - originalPositions[i].y
+            });
+        } else {
+            // Other words start off-screen horizontally
+            const direction = Math.random() > 0.5 ? 1 : -1;
+            const distance = gsap.utils.random(window.innerWidth * 2, window.innerWidth * 5);
+            gsap.set(word, {
+                opacity: 1,
+                x: direction * distance
             });
         }
     });
     
-    // Wait for page transition to complete (0.5s delay), then animate other words
-    const wordsToAnimate = words.filter((_, i) => i !== malikhaiIndex);
+    // Animate Malikhai smoothly from bottom to its correct position
+    if (malikhaiIndex !== -1) {
+        gsap.to(words[malikhaiIndex], {
+            duration: 0.1,
+            y: 0,
+            ease: "power2.out"
+        });
+    }
     
-    gsap.to(wordsToAnimate, {
-        duration: 1,
+    // Wait for page transition to complete, then animate only the other words
+    const otherWords = words.filter((_, i) => i !== malikhaiIndex);
+    
+    gsap.to(otherWords, {
+        duration: 0.8,
         delay: 0.5,
-        x: (i) => {
-            // Get actual index in original array
-            let actualIndex = 0;
-            let count = 0;
-            for (let j = 0; j < words.length; j++) {
-                if (j !== malikhaiIndex) {
-                    if (count === i) {
-                        actualIndex = j;
-                        break;
-                    }
-                    count++;
-                }
-            }
-            return originalPositions[actualIndex].x;
-        },
+        x: 0,
         ease: "power4.inOut",
         stagger: {
             amount: 0.3,
             from: "start"
         },
         onComplete: () => {
-            // Reset position styles to relative instead of absolute
-            gsap.set(words, {
-                position: "relative",
-                x: 0,
-                y: 0
+            // Temporarily switch to relative to get natural flow positions
+            words.forEach(word => {
+                gsap.set(word, {
+                    position: 'relative',
+                    left: 'auto',
+                    top: 'auto',
+                    x: 0,
+                    y: 0
+                });
             });
+            
+            // Force a reflow to get accurate positions
+            aboutText.offsetHeight;
+            
+            // Store new positions
+            const newPositions = words.map(word => {
+                const rect = word.getBoundingClientRect();
+                const textParentRect = aboutText.getBoundingClientRect();
+                return {
+                    x: rect.left - textParentRect.left,
+                    y: rect.top - textParentRect.top
+                };
+            });
+            
+            // Switch back to absolute with new positions
+            words.forEach((word, i) => {
+                gsap.set(word, {
+                    position: 'absolute',
+                    left: newPositions[i].x,
+                    top: newPositions[i].y,
+                    x: 0,
+                    y: 0
+                });
+            });
+            
+            // Add resize handler for responsiveness
+            let resizeTimeout;
+            const handleResize = () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    // Temporarily switch to relative
+                    words.forEach(word => {
+                        gsap.set(word, {
+                            position: 'relative',
+                            left: 'auto',
+                            top: 'auto',
+                            x: 0,
+                            y: 0
+                        });
+                    });
+                    
+                    // Force reflow
+                    aboutText.offsetHeight;
+                    
+                    // Get new positions
+                    const updatedPositions = words.map(word => {
+                        const rect = word.getBoundingClientRect();
+                        const textParentRect = aboutText.getBoundingClientRect();
+                        return {
+                            x: rect.left - textParentRect.left,
+                            y: rect.top - textParentRect.top
+                        };
+                    });
+                    
+                    // Switch back to absolute with updated positions
+                    words.forEach((word, i) => {
+                        gsap.set(word, {
+                            position: 'absolute',
+                            left: updatedPositions[i].x,
+                            top: updatedPositions[i].y,
+                            x: 0,
+                            y: 0
+                        });
+                    });
+                }, 150);
+            };
+            
+            window.addEventListener('resize', handleResize);
         }
     });
 }
