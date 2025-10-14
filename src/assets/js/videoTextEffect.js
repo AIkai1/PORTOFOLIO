@@ -126,12 +126,24 @@ export function initVideoTextEffect() {
         canvas.width = video.videoWidth || 1920;
         canvas.height = video.videoHeight || 1080;
         
+        // Mobile-specific FPS throttling
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        const FPS = isMobile ? 20 : 60; // 20 FPS on mobile, 60 FPS on desktop
+        
         let videoOpacity = 0;
+        let lastUpdate = 0;
+        const frameInterval = 1000 / FPS;
         
         // Keep text WHITE initially - will apply video effect gradually
         greetElement.style.color = 'white';
         
-        function updateVideoBackground() {
+        function updateVideoBackground(currentTime) {
+            // Throttle based on device
+            if (currentTime - lastUpdate < frameInterval) {
+                requestAnimationFrame(updateVideoBackground);
+                return;
+            }
+            lastUpdate = currentTime;
             
             if (video.readyState === video.HAVE_ENOUGH_DATA && videoOpacity > 0) {
                 // Draw white background
