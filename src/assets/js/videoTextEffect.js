@@ -111,7 +111,16 @@ export function initVideoTextEffect() {
         // Replace all the SplitText spans with simple plain text
         greetElement.innerHTML = 'MALIKHAI<br>FELIX';
         
-        // Create optimized canvas (reuse if exists)
+        // Check if mobile - if so, just keep white text and skip video effect
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        
+        if (isMobile) {
+            // Mobile: just keep it white, no video effect
+            greetElement.style.color = 'white';
+            return;
+        }
+        
+        // Desktop only: Create optimized canvas (reuse if exists)
         if (!globalCanvas) {
             globalCanvas = document.createElement('canvas');
             globalCtx = globalCanvas.getContext('2d', { 
@@ -126,9 +135,8 @@ export function initVideoTextEffect() {
         canvas.width = video.videoWidth || 1920;
         canvas.height = video.videoHeight || 1080;
         
-        // Mobile-specific FPS throttling
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        const FPS = isMobile ? 15 : 30; // Much lower FPS on mobile to prevent flickering
+        // Desktop-only FPS (mobile exits before reaching here)
+        const FPS = 30;
         
         let videoOpacity = 0;
         let lastUpdate = 0;
@@ -156,34 +164,22 @@ export function initVideoTextEffect() {
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
                 ctx.globalAlpha = 1;
                 
-                // Convert to data URL with lower quality on mobile
-                const quality = isMobile ? 0.7 : 0.85;
-                const dataURL = canvas.toDataURL('image/jpeg', quality);
+                // Desktop only - high quality
+                const dataURL = canvas.toDataURL('image/jpeg', 0.85);
                 
-                // Only update if changed significantly (helps reduce flickering)
+                // Only update if changed significantly
                 if (dataURL !== lastDataURL) {
                     lastDataURL = dataURL;
                     
-                    // Apply background clipping to text
+                    // Apply background clipping to text (desktop only)
                     greetElement.style.background = `url(${dataURL})`;
                     greetElement.style.backgroundPosition = 'center center';
                     greetElement.style.backgroundSize = 'cover';
-                    // Use scroll on mobile - fixed causes flickering on iOS
-                    greetElement.style.backgroundAttachment = isMobile ? 'scroll' : 'fixed';
+                    greetElement.style.backgroundAttachment = 'fixed';
                     greetElement.style.webkitBackgroundClip = 'text';
                     greetElement.style.backgroundClip = 'text';
                     greetElement.style.webkitTextFillColor = 'transparent';
                     greetElement.style.color = 'transparent';
-                    
-                    // Mobile optimization - force GPU acceleration and backface visibility
-                    if (isMobile) {
-                        greetElement.style.transform = 'translate3d(0, 0, 0)';
-                        greetElement.style.webkitTransform = 'translate3d(0, 0, 0)';
-                        greetElement.style.backfaceVisibility = 'hidden';
-                        greetElement.style.webkitBackfaceVisibility = 'hidden';
-                        greetElement.style.perspective = '1000px';
-                        greetElement.style.webkitPerspective = '1000px';
-                    }
                 }
             }
             
