@@ -1,5 +1,5 @@
 import { initLetterAnimation } from './letter.js';
-import { initAnimations, animateBoxTransition, animateContentExit, resetContentPosition } from './animations.js';
+import { initAnimations, animateBoxTransition, animateContentExit, resetContentPosition, animateAboutText, clearAboutText } from './animations.js';
 import { initNavigation } from './navigation.js';
 import { initVideoTextEffect, replayGreetAnimation } from './videoTextEffect.js';
 
@@ -41,7 +41,11 @@ function navigateToPage(targetIndex) {
         const currentContent = navPages[currentPageIndex].content;
         // Animate current page content moving up and out first
         animateContentExit(currentContent, () => {
-            // After content moves up, proceed with page transition
+            // After content moves up, clear text if leaving about page
+            if (currentPageIndex === 1) {
+                clearAboutText();
+            }
+            // Then proceed with page transition
             proceedWithTransition(targetIndex);
         });
     } else {
@@ -81,6 +85,11 @@ function proceedWithTransition(targetIndex) {
             } else {
                 contentElement.style.overflowY = 'hidden';
             }
+        }
+        
+        // Trigger about text animation if we're on the about page
+        if (targetIndex === 1) {
+            animateAboutText();
         }
     });
     
