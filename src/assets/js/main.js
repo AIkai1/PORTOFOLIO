@@ -2,6 +2,7 @@ import { initLetterAnimation } from './letter.js';
 import { initAnimations, animateBoxTransition, animateContentExit, resetContentPosition, animateAboutText, clearAboutText } from './animations.js';
 import { initNavigation } from './navigation.js';
 import { initVideoTextEffect, replayGreetAnimation } from './videoTextEffect.js';
+import { stopVideoBackground } from './videoTextEffect.js';
 
 // Initialize all animations
 initLetterAnimation();
@@ -44,6 +45,10 @@ function navigateToPage(targetIndex) {
             // After content moves up, clear text if leaving about page
             if (currentPageIndex === 1) {
                 clearAboutText();
+            }
+            // If leaving the start page (greet), clean up video background
+            if (currentPageIndex === 0 && typeof stopVideoBackground === 'function') {
+                stopVideoBackground();
             }
             // Then proceed with page transition
             proceedWithTransition(targetIndex);

@@ -37,6 +37,7 @@ html, body {
   justify-content: center;
   align-items: center;
   user-select: none;
+  
   flex-direction: row;
 }
 .comp1 div {

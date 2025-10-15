@@ -7,6 +7,9 @@ let globalVideo = null;
 let globalCanvas = null;
 let globalCtx = null;
 
+// Cleanup function to stop video background and clear data URLs
+let stopVideoBackground = null;
+
 export function initVideoTextEffect() {
     const greetElement = document.querySelector('.greet');
     
@@ -146,6 +149,16 @@ export function initVideoTextEffect() {
         // Keep text WHITE initially - will apply video effect gradually
         greetElement.style.color = 'white';
         
+        let running = true;
+        stopVideoBackground = () => {
+            running = false;
+            greetElement.style.background = 'none';
+            greetElement.style.backgroundClip = 'border-box';
+            greetElement.style.webkitBackgroundClip = 'border-box';
+            greetElement.style.webkitTextFillColor = 'white';
+            greetElement.style.color = 'white';
+        };
+
         function updateVideoBackground(currentTime) {
             // Throttle based on device
             if (currentTime - lastUpdate < frameInterval) {
@@ -153,7 +166,7 @@ export function initVideoTextEffect() {
                 return;
             }
             lastUpdate = currentTime;
-            
+            if (!running) return;
             if (video.readyState === video.HAVE_ENOUGH_DATA && videoOpacity > 0) {
                 // Draw white background
                 ctx.fillStyle = 'white';
@@ -187,7 +200,7 @@ export function initVideoTextEffect() {
         }
         
         // Start animation loop
-        requestAnimationFrame(updateVideoBackground);
+    requestAnimationFrame(updateVideoBackground);
         
         // Smoothly fade in the video opacity
         gsap.to({ value: 0 }, {
@@ -240,3 +253,5 @@ export function replayGreetAnimation() {
         });
     });
 }
+
+export { stopVideoBackground };
