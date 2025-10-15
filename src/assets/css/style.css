@@ -92,6 +92,48 @@ html, body {
     padding: 2rem;
   }
 }
+
+/* MacBook Air M1 specific (1440px × 900px) */
+@media (min-width: 1025px) and (max-width: 1440px) and (max-height: 920px) {
+  .box {
+    max-height: 80vh !important;
+    max-width: 88vw !important;
+    padding: 1.5rem !important;
+    overflow-y: hidden !important;
+    overflow-x: visible !important;
+  }
+  
+  #aboutbox2 {
+    overflow-y: hidden !important;
+    overflow-x: visible !important;
+  }
+  
+  .about {
+    font-size: clamp(0.75rem, 1.5vw, 1.4rem) !important;
+    line-height: 1.4 !important;
+    top: 8% !important;
+    max-width: 650px !important;
+    min-height: 300px !important;
+    overflow: visible !important;
+  }
+  
+  .meimage {
+    height: 380px !important;
+    width: 315px !important;
+    max-width: 315px !important;
+    max-height: 380px !important;
+    top: 12% !important;
+    right: 5% !important;
+    left: auto !important;
+    transform: none !important;
+    position: absolute !important;
+  }
+  
+  .greet {
+    font-size: clamp(2.2rem, 11vw, 11rem) !important;
+  }
+}
+
 .box {
   position: absolute;
   inset: 5vw;
