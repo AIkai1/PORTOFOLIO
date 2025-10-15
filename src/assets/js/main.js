@@ -56,6 +56,9 @@ function navigateToPage(targetIndex) {
 
 // Helper function to handle the actual page transition
 function proceedWithTransition(targetIndex) {
+    // Capture the previous page index before updating
+    const previousPageIndex = currentPageIndex;
+    
     // Hide all boxes and reset button colors
     navPages.forEach(page => {
         page.button.style.color = "#b5b5b5";
@@ -89,7 +92,8 @@ function proceedWithTransition(targetIndex) {
         
         // Trigger about text animation if we're on the about page
         if (targetIndex === 1) {
-            animateAboutText();
+            // Pass the previous page index to control Malikhai's animation direction
+            animateAboutText(previousPageIndex);
         }
     });
     

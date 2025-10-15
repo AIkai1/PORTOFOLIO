@@ -3,7 +3,7 @@ import { SplitText } from '/gsap-public/esm/SplitText.js';
 
 // Initialize GSAP animations
 export function initAnimations() {
-    gsap.set("div", { opacity: 1 });
+    gsap.set("div:not(.meimage)", { opacity: 1 });
     gsap.registerPlugin(SplitText);
     
     // Animate navigation menu
@@ -68,13 +68,20 @@ export function clearAboutText() {
     
     // Clear the text content
     aboutText.textContent = '';
+    
+    // Reset meimage opacity to 0
+    const meImage = document.querySelector('.meimage');
+    if (meImage) {
+        gsap.set(meImage, { opacity: 0 });
+    }
 }
 
 // Store the current split instance
 let currentAboutSplit = null;
 
 // Function to animate about text with scatter and implosion effect
-export function animateAboutText() {
+// fromPageIndex: 0 = home, 2 = project, 3 = contact
+export function animateAboutText(fromPageIndex = 0) {
     const aboutText = document.querySelector('.about');
     if (!aboutText) return;
     
@@ -128,14 +135,27 @@ export function animateAboutText() {
         });
     });
     
+    // Determine if coming from project or contact page (should animate from right)
+    const shouldAnimateFromRight = fromPageIndex === 2 || fromPageIndex === 3;
+    
     // Set Malikhai and other words initial positions
     words.forEach((word, i) => {
         if (i === malikhaiIndex) {
-            // Malikhai starts from the bottom of the page
-            gsap.set(word, {
-                opacity: 1,
-                y: window.innerHeight - originalPositions[i].y
-            });
+            if (shouldAnimateFromRight) {
+                // Malikhai starts from the right side of the page
+                gsap.set(word, {
+                    opacity: 1,
+                    x: window.innerWidth - originalPositions[i].x,
+                    y: 0
+                });
+            } else {
+                // Malikhai starts from the bottom of the page (when coming from home)
+                gsap.set(word, {
+                    opacity: 1,
+                    x: 0,
+                    y: window.innerHeight - originalPositions[i].y
+                });
+            }
         } else {
             // Other words start off-screen horizontally
             const direction = Math.random() > 0.5 ? 1 : -1;
@@ -147,10 +167,11 @@ export function animateAboutText() {
         }
     });
     
-    // Animate Malikhai smoothly from bottom to its correct position
+    // Animate Malikhai smoothly to its correct position
     if (malikhaiIndex !== -1) {
         gsap.to(words[malikhaiIndex], {
             duration: 0.1,
+            x: 0,
             y: 0,
             ease: "power2.out"
         });
@@ -160,7 +181,7 @@ export function animateAboutText() {
     const otherWords = words.filter((_, i) => i !== malikhaiIndex);
     
     gsap.to(otherWords, {
-        duration: 0.8,
+        duration: 0.2,
         delay: 0.5,
         x: 0,
         ease: "power4.inOut",
@@ -247,6 +268,16 @@ export function animateAboutText() {
             };
             
             window.addEventListener('resize', handleResize);
+            
+            // Smoothly fade in the meimage div after text animation completes
+            const meImage = document.querySelector('.meimage');
+            if (meImage) {
+                gsap.to(meImage, {
+                    opacity: 1,
+                    duration: 1,
+                    ease: "power2.inOut"
+                });
+            }
         }
     });
 }
